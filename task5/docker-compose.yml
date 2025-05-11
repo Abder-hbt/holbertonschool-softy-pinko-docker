@@ -1,0 +1,24 @@
+version: '3'
+services:
+  frontend:
+    image: nginx:latest
+    ports:
+      - "8080:80"  # Mappe le port 80 de Nginx à votre port local 8080
+    volumes:
+      - ./frontend:/usr/share/nginx/html
+
+  backend:
+    image: <votre-image-backend>
+    ports:
+      - "5000:5000"  # Mappe le port 5000 de Gunicorn à votre port local 5000
+    environment:
+      - FLASK_ENV=development
+
+  nginx-proxy:
+    image: nginx:latest
+    ports:
+      - "80:80"  # Mappe le port 80 du proxy Nginx au port local 80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - frontend  # Nginx dépend uniquement du frontend et pas du backend
